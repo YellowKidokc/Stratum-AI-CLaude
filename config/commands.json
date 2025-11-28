@@ -1,0 +1,74 @@
+[
+  {
+    "id": "show_main_window",
+    "label": "Show / hide Stratum",
+    "action": "ui.toggle_main",
+    "hotkey": "ctrl+alt+g",
+    "hotstring": "",
+    "tags": ["navigation"]
+  },
+  {
+    "id": "tts_speak_selection",
+    "label": "Speak selected text",
+    "action": "tts.speak_selection",
+    "hotkey": "capslock+a",
+    "hotstring": "",
+    "tags": ["tts", "accessibility"]
+  },
+  {
+    "id": "vault_show_prompts",
+    "label": "Show AI prompts",
+    "action": "vault.show_lane",
+    "hotkey": "ctrl+alt+p",
+    "hotstring": "",
+    "tags": ["vault", "prompts"]
+  },
+  {
+    "id": "vault_show_snippets",
+    "label": "Show code snippets",
+    "action": "vault.show_lane",
+    "hotkey": "ctrl+alt+s",
+    "hotstring": "",
+    "tags": ["vault", "snippets"]
+  },
+  {
+    "id": "ai_quick_chat",
+    "label": "Quick AI chat",
+    "action": "ai.open_chat",
+    "hotkey": "ctrl+alt+c",
+    "hotstring": "",
+    "tags": ["ai", "chat"]
+  },
+  {
+    "id": "settings_open",
+    "label": "Open settings",
+    "action": "ui.show_settings",
+    "hotkey": "ctrl+alt+o",
+    "hotstring": "",
+    "tags": ["settings", "navigation"]
+  },
+  {
+    "id": "clipboard_ai_process",
+    "label": "Process clipboard with AI",
+    "action": "ai.process_clipboard",
+    "hotkey": "ctrl+alt+x",
+    "hotstring": "",
+    "tags": ["ai", "clipboard"]
+  },
+  {
+    "id": "expand_code",
+    "label": "Expand code snippet",
+    "action": "vault.expand_snippet",
+    "hotkey": "",
+    "hotstring": "/code",
+    "tags": ["vault", "snippets", "hotstring"]
+  },
+  {
+    "id": "expand_prompt",
+    "label": "Expand AI prompt",
+    "action": "vault.expand_prompt",
+    "hotkey": "",
+    "hotstring": "/prompt",
+    "tags": ["vault", "prompts", "hotstring"]
+  }
+]

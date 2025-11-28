@@ -1,0 +1,32 @@
+{
+  "version": "1.0",
+  "workflows": [
+    {
+      "id": "code_review_workflow",
+      "name": "Code Review Process",
+      "description": "Complete workflow for reviewing code changes",
+      "steps": [
+        {
+          "id": "load_code",
+          "name": "Load Code",
+          "action": "vault.get_item",
+          "params": {"lane": "snippets", "query": "code"}
+        },
+        {
+          "id": "analyze_code",
+          "name": "Analyze with AI",
+          "action": "ai.chat_completion",
+          "params": {"provider": "openai", "prompt_template": "code_review"}
+        },
+        {
+          "id": "save_feedback",
+          "name": "Save Feedback",
+          "action": "vault.add_item",
+          "params": {"lane": "knowledge", "title": "Code Review: {timestamp}"}
+        }
+      ],
+      "created_at": "2024-01-01T00:00:00",
+      "updated_at": "2024-01-01T00:00:00"
+    }
+  ]
+}
