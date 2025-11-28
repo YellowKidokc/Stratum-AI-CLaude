@@ -106,6 +106,18 @@ class TTSAdapter:
         """Set voice."""
         self.tts.set_voice(voice_name)
 
+    def save_to_file(self, text: str, file_path: str) -> bool:
+        """Save TTS output as an audio file (MP3).
+
+        Args:
+            text: The text to convert to speech
+            file_path: Path where to save the MP3 file
+
+        Returns:
+            True if successful, False otherwise
+        """
+        return self.tts.save_to_file(text, file_path)
+
 
 class ShortcutsAdapter:
     """Adapter to make CommandRegistry work like the old shortcuts system."""

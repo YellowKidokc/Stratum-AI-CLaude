@@ -80,3 +80,64 @@ class CommandRegistry:
             handler()
         else:
             handler(arg)
+
+    # ---------- CRUD operations ----------
+
+    def save(self) -> None:
+        """Save all commands to JSON file."""
+        data = []
+        for cmd in self._commands.values():
+            data.append({
+                "id": cmd.id,
+                "label": cmd.label,
+                "action": cmd.action,
+                "hotkey": cmd.hotkey,
+                "hotstring": cmd.hotstring,
+                "tags": cmd.tags or [],
+            })
+        self._path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+
+    def add_command(self, cmd: Command) -> bool:
+        """Add a new command to the registry and save."""
+        if cmd.id in self._commands:
+            return False
+        self._commands[cmd.id] = cmd
+        self.save()
+        return True
+
+    def update_command(
+        self,
+        command_id: str,
+        *,
+        label: str | None = None,
+        action: str | None = None,
+        hotkey: str | None = None,
+        hotstring: str | None = None,
+        tags: list[str] | None = None,
+    ) -> bool:
+        """Update an existing command."""
+        cmd = self._commands.get(command_id)
+        if not cmd:
+            return False
+
+        if label is not None:
+            cmd.label = label
+        if action is not None:
+            cmd.action = action
+        if hotkey is not None:
+            cmd.hotkey = hotkey
+        if hotstring is not None:
+            cmd.hotstring = hotstring
+        if tags is not None:
+            cmd.tags = tags
+
+        self.save()
+        return True
+
+    def remove_command(self, command_id: str) -> bool:
+        """Delete a command from the registry."""
+        if command_id in self._commands:
+            del self._commands[command_id]
+            self.save()
+            return True
+        return False

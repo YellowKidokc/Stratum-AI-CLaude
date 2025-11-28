@@ -220,3 +220,95 @@ class TTSEngine:
     def is_speaking(self) -> bool:
         """Check if TTS is currently speaking."""
         return self._current_process is not None and self._current_process.poll() is None
+
+    def save_to_file(self, text: str, file_path: str) -> bool:
+        """Save TTS output as an MP3 file.
+
+        Args:
+            text: The text to convert to speech
+            file_path: Path where to save the MP3 file
+
+        Returns:
+            True if successful, False otherwise
+        """
+        if not text.strip():
+            return False
+
+        try:
+            if self._edge_available:
+                return self._save_edge_tts(text, file_path)
+            else:
+                return self._save_sapi_tts(text, file_path)
+        except Exception as e:
+            print(f"Error saving TTS to file: {e}")
+            return False
+
+    def _save_edge_tts(self, text: str, file_path: str) -> bool:
+        """Save TTS using Edge TTS to file."""
+        try:
+            # Ensure .mp3 extension
+            if not file_path.lower().endswith('.mp3'):
+                file_path += '.mp3'
+
+            # Build Edge TTS command
+            cmd = [
+                "edge-tts",
+                "--text", text,
+                "--voice", self._voice,
+                "--rate", self._rate,
+                "--volume", self._volume,
+                "--write-media", file_path
+            ]
+
+            # Run Edge TTS and wait for completion
+            result = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                timeout=120  # 2 minute timeout for longer texts
+            )
+
+            return result.returncode == 0 and Path(file_path).exists()
+
+        except subprocess.TimeoutExpired:
+            print("Edge TTS timed out while saving file")
+            return False
+        except Exception as e:
+            print(f"Edge TTS save error: {e}")
+            return False
+
+    def _save_sapi_tts(self, text: str, file_path: str) -> bool:
+        """Save TTS using Windows SAPI to file (WAV format, then convert if possible)."""
+        try:
+            # Ensure .wav extension for SAPI
+            wav_path = file_path
+            if file_path.lower().endswith('.mp3'):
+                wav_path = file_path[:-4] + '.wav'
+
+            # Use PowerShell to save via SAPI
+            escaped_text = text.replace('"', '""').replace("'", "''")
+            ps_command = f'''
+            Add-Type -AssemblyName System.Speech;
+            $speak = New-Object System.Speech.Synthesis.SpeechSynthesizer;
+            $speak.SetOutputToWaveFile("{wav_path}");
+            $speak.Speak("{escaped_text}");
+            $speak.Dispose();
+            '''
+
+            result = subprocess.run(
+                ["powershell", "-Command", ps_command],
+                capture_output=True,
+                text=True,
+                timeout=120
+            )
+
+            if result.returncode == 0 and Path(wav_path).exists():
+                # If original request was for MP3, note that we saved as WAV
+                if file_path.lower().endswith('.mp3'):
+                    print(f"Note: SAPI saved as WAV format: {wav_path}")
+                return True
+            return False
+
+        except Exception as e:
+            print(f"SAPI save error: {e}")
+            return False

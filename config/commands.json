@@ -16,6 +16,30 @@
     "tags": ["tts", "accessibility"]
   },
   {
+    "id": "email_snippet_ctrl_alt_o",
+    "label": "Insert Email (Ctrl+Alt+O)",
+    "action": "snippet:email_primary",
+    "hotkey": "ctrl+alt+o",
+    "hotstring": "",
+    "tags": ["snippet", "email"]
+  },
+  {
+    "id": "email_snippet_ctrl_alt_l",
+    "label": "Insert Email (Ctrl+Alt+L)",
+    "action": "snippet:email_primary",
+    "hotkey": "ctrl+alt+l",
+    "hotstring": "",
+    "tags": ["snippet", "email"]
+  },
+  {
+    "id": "email_snippet_hotstring_low",
+    "label": "Insert Email Hotstring (LOW)",
+    "action": "snippet:email_primary",
+    "hotkey": "",
+    "hotstring": "LOW",
+    "tags": ["snippet", "email", "hotstring"]
+  },
+  {
     "id": "vault_show_prompts",
     "label": "Show AI prompts",
     "action": "vault.show_lane",
@@ -43,7 +67,7 @@
     "id": "settings_open",
     "label": "Open settings",
     "action": "ui.show_settings",
-    "hotkey": "ctrl+alt+o",
+    "hotkey": "",
     "hotstring": "",
     "tags": ["settings", "navigation"]
   },
@@ -54,21 +78,5 @@
     "hotkey": "ctrl+alt+x",
     "hotstring": "",
     "tags": ["ai", "clipboard"]
-  },
-  {
-    "id": "expand_code",
-    "label": "Expand code snippet",
-    "action": "vault.expand_snippet",
-    "hotkey": "",
-    "hotstring": "/code",
-    "tags": ["vault", "snippets", "hotstring"]
-  },
-  {
-    "id": "expand_prompt",
-    "label": "Expand AI prompt",
-    "action": "vault.expand_prompt",
-    "hotkey": "",
-    "hotstring": "/prompt",
-    "tags": ["vault", "prompts", "hotstring"]
   }
 ]

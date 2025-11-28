@@ -111,3 +111,92 @@ class VaultManager:
                 if item.id == item_id:
                     return item
         return None
+
+    def add_item(self, title: str, content: str, lane: str = "snippets",
+                 tags: Optional[List[str]] = None, item_type: str = "snippet") -> str:
+        """Add a new item to a lane.
+
+        Args:
+            title: Display name for the item
+            content: The actual content/value
+            lane: Which lane to add to (prompts, api_keys, passwords, notes, snippets, other)
+            tags: Optional list of tags
+            item_type: Type of item (prompt, api_key, password, note, snippet)
+
+        Returns:
+            The ID of the newly created item
+        """
+        # Map common lane names to zone IDs
+        zone_mapping = {
+            "prompts": "zone1",
+            "api_keys": "zone2",
+            "passwords": "zone3",
+            "notes": "zone4",
+            "snippets": "zone5",
+            "other": "zone6"
+        }
+
+        zone_id = zone_mapping.get(lane.lower(), "zone5")
+        zone = self.zones.get(zone_id)
+        if not zone:
+            return ""
+
+        # Generate unique ID
+        item_id = title.lower().replace(" ", "_")
+        existing_ids = {item.id for z in self.zones.values() for item in z.items}
+        counter = 1
+        original_id = item_id
+        while item_id in existing_ids:
+            item_id = f"{original_id}_{counter}"
+            counter += 1
+
+        new_item = VaultItem(
+            id=item_id,
+            label=title,
+            type=item_type,
+            value=content,
+            pinned=False,
+            hotkey="",
+            hotstring=""
+        )
+        zone.items.append(new_item)
+        self.save()
+        return item_id
+
+    def delete_item(self, item_id: str) -> bool:
+        """Delete an item from the vault.
+
+        Args:
+            item_id: ID of the item to delete
+
+        Returns:
+            True if item was found and deleted, False otherwise
+        """
+        for zone in self.zones.values():
+            for i, item in enumerate(zone.items):
+                if item.id == item_id:
+                    zone.items.pop(i)
+                    self.save()
+                    return True
+        return False
+
+    def update_item(self, item_id: str, **kwargs) -> bool:
+        """Update an existing item.
+
+        Args:
+            item_id: ID of the item to update
+            **kwargs: Fields to update (label, value, type, pinned, hotkey, hotstring)
+
+        Returns:
+            True if item was found and updated, False otherwise
+        """
+        item = self.find_item(item_id)
+        if not item:
+            return False
+
+        for key, value in kwargs.items():
+            if hasattr(item, key):
+                setattr(item, key, value)
+
+        self.save()
+        return True

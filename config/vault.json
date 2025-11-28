@@ -1,27 +1,63 @@
 {
-  "version": "1.0",
-  "items": [
+  "zones": [
     {
-      "id": "sample_prompt_1",
-      "title": "Code Review Assistant",
-      "content": "You are an expert code reviewer. Analyze the following code for:\n- Bugs and potential issues\n- Code quality and best practices\n- Performance optimizations\n- Security concerns\n- Readability and maintainability\n\nProvide specific, actionable feedback.",
-      "lane": "prompts",
-      "tags": ["coding", "review", "development"],
-      "created_at": "2024-01-01T00:00:00",
-      "updated_at": "2024-01-01T00:00:00",
-      "pinned": false,
-      "metadata": {}
+      "id": "zone1",
+      "name": "Prompts",
+      "items": [
+        {
+          "id": "sample_prompt_1",
+          "label": "Code Review Assistant",
+          "type": "prompt",
+          "value": "You are an expert code reviewer. Analyze the following code for:\n- Bugs and potential issues\n- Code quality and best practices\n- Performance optimizations\n- Security concerns\n- Readability and maintainability\n\nProvide specific, actionable feedback.",
+          "pinned": false,
+          "hotkey": "",
+          "hotstring": ""
+        }
+      ]
     },
     {
-      "id": "sample_snippet_1",
-      "title": "Python Async Function Template",
-      "content": "import asyncio\nfrom typing import Any, Optional\n\nasync def async_function_name(param1: str, param2: Optional[int] = None) -> dict[str, Any]:\n    \"\"\"\n    Description of what this function does.\n\n    Args:\n        param1: Description of param1\n        param2: Description of param2 (optional)\n\n    Returns:\n        Description of return value\n    \"\"\"\n    try:\n        # Implementation here\n        result = {\"status\": \"success\"}\n        return result\n    except Exception as e:\n        return {\"status\": \"error\", \"message\": str(e)}",
-      "lane": "snippets",
-      "tags": ["python", "async", "template"],
-      "created_at": "2024-01-01T00:00:00",
-      "updated_at": "2024-01-01T00:00:00",
-      "pinned": false,
-      "metadata": {"language": "python"}
+      "id": "zone2",
+      "name": "API Keys",
+      "items": []
+    },
+    {
+      "id": "zone3",
+      "name": "Passwords",
+      "items": []
+    },
+    {
+      "id": "zone4",
+      "name": "Notes",
+      "items": []
+    },
+    {
+      "id": "zone5",
+      "name": "Snippets",
+      "items": [
+        {
+          "id": "email_primary",
+          "label": "Primary Email",
+          "type": "snippet",
+          "value": "Lowesfencing@gmail.com",
+          "pinned": true,
+          "hotkey": "",
+          "hotstring": ""
+        },
+        {
+          "id": "sample_snippet_1",
+          "label": "Python Async Function Template",
+          "type": "snippet",
+          "value": "import asyncio\nfrom typing import Any, Optional\n\nasync def async_function_name(param1: str, param2: Optional[int] = None) -> dict[str, Any]:\n    \"\"\"\n    Description of what this function does.\n\n    Args:\n        param1: Description of param1\n        param2: Description of param2 (optional)\n\n    Returns:\n        Description of return value\n    \"\"\"\n    try:\n        # Implementation here\n        result = {\"status\": \"success\"}\n        return result\n    except Exception as e:\n        return {\"status\": \"error\", \"message\": str(e)}",
+          "pinned": false,
+          "hotkey": "",
+          "hotstring": ""
+        }
+      ]
+    },
+    {
+      "id": "zone6",
+      "name": "Other",
+      "items": []
     }
   ]
 }

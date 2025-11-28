@@ -9,6 +9,7 @@ from core.hotstrings import HotstringEngine
 from core.vault_manager import VaultManager
 from core.ai_clients import create_ai_manager_from_settings
 from core.tts_engine import TTSEngine
+from core.snippet_handler import SnippetHandler
 from ui.main_window import create_main_window
 from ui.api_key_dialog import ApiKeyDialog
 
@@ -42,8 +43,17 @@ def main() -> None:
     registry.load()
 
     vault = VaultManager(config_dir / "vault.json")
+    vault.load()  # Load vault data
+
     ai_manager = create_ai_manager_from_settings(settings)
     tts_engine = TTSEngine()
+
+    # Snippet handler for inserting text from vault
+    snippet_handler = SnippetHandler(vault)
+
+    # Register action handlers
+    registry.register_handler("snippet", snippet_handler.insert_snippet)
+    registry.register_handler("tts.speak_selection", tts_engine.speak_selection)
 
     # Hotkeys + hotstrings
     register_hotkeys(registry)

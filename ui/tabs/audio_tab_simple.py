@@ -7,6 +7,7 @@ from __future__ import annotations
 from PySide6.QtCore import Signal
 from PySide6.QtWidgets import (
     QComboBox,
+    QFileDialog,
     QGroupBox,
     QHBoxLayout,
     QLabel,
@@ -84,11 +85,21 @@ class AudioTab(BaseTab):
         quick_layout.addStretch()
         tts_layout.addLayout(quick_layout)
 
-        # Speak button
+        # Speak and Download buttons
+        buttons_layout = QHBoxLayout()
+
         self.btn_speak = QPushButton("🔊 Speak Text")
         self.btn_speak.setStyleSheet("padding: 10px; font-weight: bold;")
         self.btn_speak.clicked.connect(self._run_tts)
-        tts_layout.addWidget(self.btn_speak)
+        buttons_layout.addWidget(self.btn_speak)
+
+        self.btn_download = QPushButton("💾 Download as MP3")
+        self.btn_download.setStyleSheet("padding: 10px;")
+        self.btn_download.setToolTip("Save this text-to-speech as an MP3 file")
+        self.btn_download.clicked.connect(self._download_as_mp3)
+        buttons_layout.addWidget(self.btn_download)
+
+        tts_layout.addLayout(buttons_layout)
 
         tts_group.setLayout(tts_layout)
         layout.addWidget(tts_group)
@@ -149,3 +160,52 @@ class AudioTab(BaseTab):
     def _update_status(self, status: str) -> None:
         """Update status label."""
         self.lbl_status.setText(status)
+
+    def _download_as_mp3(self) -> None:
+        """Download the current text as an MP3 file."""
+        text = self.txt_input.toPlainText().strip()
+        if not text:
+            QMessageBox.warning(self, "No Text", "Please enter some text to convert to audio.")
+            return
+
+        # Ask where to save the MP3
+        file_path, _ = QFileDialog.getSaveFileName(
+            self,
+            "Save Audio As",
+            "stratum_tts.mp3",
+            "MP3 Files (*.mp3);;All Files (*.*)",
+        )
+
+        if not file_path:
+            return  # User canceled
+
+        try:
+            self.status_changed.emit("Saving audio file...")
+            self.btn_download.setEnabled(False)
+
+            ok = self.tts.save_to_file(text, file_path)
+
+            if ok:
+                self.status_changed.emit("Audio saved!")
+                QMessageBox.information(
+                    self,
+                    "Saved",
+                    f"Audio saved successfully:\n{file_path}",
+                )
+            else:
+                self.status_changed.emit("Save failed")
+                QMessageBox.critical(
+                    self,
+                    "Error",
+                    "The TTS engine reported a failure while saving the file.",
+                )
+        except Exception as e:
+            self.status_changed.emit(f"Error: {str(e)}")
+            QMessageBox.critical(
+                self,
+                "Error",
+                f"Failed to save MP3:\n{e}",
+            )
+        finally:
+            self.btn_download.setEnabled(True)
+            self.status_changed.emit("Ready")
